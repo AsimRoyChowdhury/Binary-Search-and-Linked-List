@@ -1,0 +1,130 @@
+#include <iostream>
+using namespace std;
+
+int binarysearch(int arr[], int s, int e, int k){
+    cout << "In recurion" << endl;
+    
+    while(s<=e){
+        int mid = (s+e)/2;
+        
+        if(arr[mid] == k) return mid;
+        else if(arr[mid] > k) return binarysearch(arr, s, mid-1, k);
+        else return binarysearch(arr, mid+1, e, k);
+        
+    }
+    return -1;
+}
+
+typedef struct node{
+    int data;
+    struct node* link;
+} node;
+
+node* head = NULL;
+
+void circular_list(int data){
+    node* temp;
+    temp = (node*)malloc(sizeof(node));
+    temp->data = data;
+    temp->link = NULL;
+    node* next;
+    if(head == NULL) {
+        head = temp;
+        temp->link = head;
+    }
+    else{
+        next = head;
+        while(next->link != head){
+            next = next->link;
+        }
+        next->link = temp;
+        temp->link = head;
+    }
+}
+
+int add_node(int data){
+    node* temp;
+    temp = (node*)malloc(sizeof(node));
+    temp->data = data;
+    temp->link = NULL;
+    node* next;
+    if(head == NULL) head = temp;
+    else{
+        next = head;
+        while(next->link != NULL){
+            next = next->link;
+        }
+        next->link = temp;
+    }
+}
+
+void print_list(){
+    node* temp;
+    temp = head;
+    while(temp->link != head){
+        cout << temp->data << "-------->";
+        temp = temp->link;
+    }
+    cout << temp->data << "-------->";
+    cout << "End of List"<< endl;
+}
+
+void delete_node(int i){
+    node* temp = head;
+    int n=0;
+    if(i==0){
+        head = head->link;
+        free(temp);
+        temp=NULL;
+    }
+    else{
+        while(temp->link!=NULL && n<i-1){
+        temp = temp->link;
+        n++;
+        }
+        node* ttm = temp->link;
+        temp->link=temp->link->link;
+        free(ttm);
+    }
+}
+
+void reverse(){
+    node* t1 = head;
+    node* t2 = t1->link;
+    node* t3 = t2->link;
+    t1->link = NULL;
+    
+    while(t3!=NULL){
+        t2->link = t1;
+        t1 = t2;
+        t2 = t3;
+        t3 = t3->link;
+    }
+    t2->link = t1;
+    head = t2;
+}
+
+int main() {
+    
+    // add_node(10);
+    // add_node(12);
+    // add_node(18);
+    // add_node(8);
+    // add_node(4);
+    // add_node(5);
+    // print_list();
+    
+    int n, a;
+    cin >> n;
+    
+    for(int i=0; i<n; i++){
+        cin >> a;
+        circular_list(a);
+    }
+    
+    print_list();
+    delete_node(3);
+    // reverse();
+    // print_list();
+    return 0;
+}
